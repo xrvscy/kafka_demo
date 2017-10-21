@@ -1,0 +1,205 @@
+---
+swagger: "2.0"
+info:
+  description: "Interface of kafka"
+  version: "0.0.1"
+  title: "kafka"
+  contact:
+    name: "siliang"
+    email: "siliang@romenscd.cn"
+basePath: "/api"
+schemes:
+- "http"
+- "https"
+consumes:
+- "application/xml"
+- "application/json"
+- "multipart/form-data"
+- "application/x-www-form-urlencoded"
+produces:
+- "application/xml"
+- "application/json"
+paths:
+  /kafka/producer/publication:
+    post:
+      tags:
+      - "producer"
+      summary: "kafka producer to publish topics"
+      description: "interface of kafka producer which can accept specified payloads\
+        \ and publish them"
+      operationId: "publish"
+      parameters:
+      - in: "body"
+        name: "payloads"
+        description: "array of ProduceRequest"
+        required: false
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/payloads"
+      responses:
+        200:
+          description: "请求成功"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "客户端请求错误"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        500:
+          description: "服务器内部错误"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+      x-swagger-router-controller: "Producer"
+  /kafka/consumerGroup/subscribtion:
+    post:
+      tags:
+      - "consumerGroup"
+      summary: "kafka consumer group to subscribe topics"
+      description: "interface of kafka consumer group which can subscribe specified\
+        \ topics"
+      operationId: "subscribe"
+      parameters:
+      - in: "body"
+        name: "payloads"
+        description: "specified options and topics"
+        required: false
+        schema:
+          $ref: "#/definitions/payloads_1"
+      responses:
+        200:
+          description: "请求成功"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "客户端请求错误"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        500:
+          description: "服务器内部错误"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+      x-swagger-router-controller: "ConsumerGroup"
+  /kafka/consumer/subscribtion:
+    post:
+      tags:
+      - "consumer"
+      summary: "kafka consumer to subscribe topics"
+      description: "interface of kafka consumer which can subscribe specified topics"
+      operationId: "consumerSubscribe"
+      parameters:
+      - in: "body"
+        name: "payloads"
+        description: "specified options and topics"
+        required: false
+        schema:
+          $ref: "#/definitions/payloads_2"
+      responses:
+        200:
+          description: "请求成功"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "客户端请求错误"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        500:
+          description: "服务器内部错误"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+      x-swagger-router-controller: "Consumer"
+definitions:
+  kafkaconsumerGroupsubscribtion_options:
+    properties:
+      groupId:
+        type: "string"
+        description: "group id"
+      fromOffset:
+        type: "string"
+        description: "offsets to use for new groups (none will emit an error if no\
+          \ offsets were saved)"
+        default: "latest"
+        enum:
+        - "earliest"
+        - "latest"
+        - "none"
+      outOfRangeOffset:
+        type: "string"
+        description: "how to recover from OutOfRangeOffset error (where save offset\
+          \ is past server retention) | accepts same value as fromOffset"
+        default: "earliest"
+        enum:
+        - "earliest"
+        - "latest"
+        - "none"
+      migrateHLC:
+        type: "boolean"
+        description: "migrate high level consumer"
+        default: false
+      migrateRolling:
+        type: "boolean"
+        default: true
+  payloads:
+    properties:
+      topic:
+        type: "string"
+        description: "topic name"
+      messages:
+        type: "array"
+        items:
+          type: "string"
+          description: "message in a topic"
+      key:
+        type: "string"
+        description: "only needed when using keyed partitioner"
+      partition:
+        type: "integer"
+        format: "int32"
+        default: 0
+      attributes:
+        type: "integer"
+        format: "int32"
+        default: 0
+      timestamp:
+        type: "string"
+        description: "only available with kafka v0.10 and KafkaClient only"
+  payloads_2:
+    type: "object"
+    properties:
+      options:
+        $ref: "#/definitions/kafkaconsumersubscribtion_options"
+      topics:
+        type: "array"
+        items:
+          $ref: "#/definitions/kafkaconsumersubscribtion_topics"
+  inline_response_200:
+    properties:
+      code:
+        type: "string"
+        description: "业务代码"
+      message:
+        type: "string"
+        description: "相关业务请求完成时的返回消息"
+  payloads_1:
+    type: "object"
+    properties:
+      options:
+        $ref: "#/definitions/kafkaconsumerGroupsubscribtion_options"
+      topics:
+        type: "array"
+        items:
+          type: "string"
+  kafkaconsumersubscribtion_options:
+    properties:
+      groupId:
+        type: "string"
+        description: "group id"
+      fromOffset:
+        type: "boolean"
+        description: "offsets to use for new customer"
+        default: false
+  kafkaconsumersubscribtion_topics:
+    properties:
+      topic:
+        type: "string"
+        description: "topic name"

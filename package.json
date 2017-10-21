@@ -1,0 +1,30 @@
+{
+  "name": "kafka",
+  "version": "0.0.1",
+  "description": "Interface of kafka",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "connect": "^3.6.5",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "js-yaml": "^3.10.0",
+    "kafka-node": "^2.2.3",
+    "lodash": "^4.17.4",
+    "logger-romens": "^1.0.3",
+    "path": "^0.12.7",
+    "swagger-tools": "^0.10.1"
+  }
+}

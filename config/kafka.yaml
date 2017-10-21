@@ -1,0 +1,46 @@
+client:
+  connection: '192.168.110.158:2181'    # Zookeeper connection string, default localhost:2181/
+  clientId: 'kafka-node-client'   # This is a user-supplied identifier for the client application,
+                                  # default kafka-node-client
+  zkOptions:                      # Zookeeper options
+      sessionTimeout: 30000
+      spinDelay : 1000
+      retries : 0
+  noAckBatchOptions:              # Object, when requireAcks is disabled on Producer side we can define the batch
+                                  # properties, 'noAckBatchSize' in bytes and 'noAckBatchAge' in milliseconds.
+      noAckBatchSize: null
+      noAckBatchAge: null
+
+producer:
+  requireAcks: 1                  # Configuration for when to consider a message as acknowledged, default 1
+  ackTimeoutMs: 100               # The amount of time in milliseconds to wait for all acks before considered,
+                                  # default 100ms
+  partitionerType: 2              # Partitioner type (default = 0, random = 1, cyclic = 2, keyed = 3, custom = 4),
+                                  # default 0
+
+consumerGroup:
+  host: '192.168.110.158:2181'          # zookeeper host omit if connecting directly to broker (see kafkaHost below)
+  kafkaHost: '192.168.110.158:9092'        # connect directly to kafka broker (instantiates a KafkaClient)
+  zk : undefined                  # put client zk settings if you need them (see Client)
+  batch: undefined                # put client batch settings if you need them (see Client)
+  ssl: true                       # optional (defaults to false) or tls options hash
+  groupId: 'ExampleTestGroup'
+  sessionTimeout: 15000
+  protocol: ['roundrobin']        # An array of partition assignment protocols ordered by preference.
+                                  # 'roundrobin' or 'range' string for built ins
+
+  fromOffset: 'latest'            # Offsets to use for new groups other options could be 'earliest' or 'none'
+                                  # (none will emit an error if no offsets were saved)
+                                  # equivalent to Java client's auto.offset.reset
+
+  outOfRangeOffset: 'earliest'    # how to recover from OutOfRangeOffset error (where save offset is
+                                  # past server retention) accepts same value as fromOffset
+  migrateHLC: false               # for details please see Migration section below
+  migrateRolling: true
+  autoCommit: false
+
+consumer:
+  autoCommit: false                # Auto commit config
+  autoCommitIntervalMs: 5000
+  fromOffset: false               # If set true, consumer will fetch message from the given offset in the payloads
+  encoding: 'utf8'                # If set to 'buffer', values will be returned as raw buffer objects
